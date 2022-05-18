@@ -157,12 +157,12 @@ gatherLocalInfoMacOS () {
 	hostType="${1}"
 	shift
 	# Core actions
-	uname -a | tee "${hostType}_system-uname-a.txt"
-	ifconfig ${nicName} | tee "${hostType}_system-ifconfig-${hostNICname}.txt"
-	cat /etc/hosts | tee "${hostType}_system-etc_hosts.txt"
+	uname -a                      | tee "${hostType}_system-uname-a.txt"
+	ifconfig "${hostNICname}"     | tee "${hostType}_system-ifconfig-${hostNICname}.txt"
+	cat /etc/hosts                | tee "${hostType}_system-etc_hosts.txt"
 	ping -c 3 "${gatewayAddr}"
 	ping -c 3 "${otherHostAddr}"
-	arp -a -n -i ${nicName} | tee "${hostType}_system-apr-a_n_i_${hostNICname}.txt"
+	arp -a -n -i "${hostNICname}" | tee "${hostType}_system-arp-a_n_i_${hostNICname}.txt"
 }
 
 
@@ -178,12 +178,12 @@ gatherLocalInfoUbuntu () {
 	hostType="${1}"
 	shift
 	# Core actions
-	uname -a | tee "${hostType}_system-uname-a.txt"
-	nmcli device show ${nicName} | tee "${hostType}_system-nmcli-device_show_${hostNICname}.txt"
-	cat /etc/hosts | tee "${hostType}_system-etc_hosts.txt"
+	uname -a                           | tee "${hostType}_system-uname-a.txt"
+	nmcli device show "${hostNICname}" | tee "${hostType}_system-nmcli-device_show_${hostNICname}.txt"
+	cat /etc/hosts                     | tee "${hostType}_system-etc_hosts.txt"
 	ping -c 3 "${gatewayAddr}"
 	ping -c 3 "${otherHostAddr}"
-	arp -a -n -i ${nicName} | tee "${hostType}_system-apr-a_n_i_${hostNICname}.txt"
+	arp -a -n -i "${hostNICname}"      | tee "${hostType}_system-arp-a_n_i_${hostNICname}.txt"
 }
 
 
@@ -213,10 +213,10 @@ gatherGatewayInfoBSD () {
 	# Set up working set
 	:
 	# Core actions
-	ssh ${gatewayUsername}@${gatewayName} 'uname -a'                       | tee gateway_system-uname-a.txt
-	ssh ${gatewayUsername}@${gatewayName} "ifconfig ${gatewayNICname}"     | tee gateway_system-ifconfig-${gatewayNICname}.txt
-	ssh ${gatewayUsername}@${gatewayName} 'cat /etc/hosts'                 | tee gateway_system-etc_hosts.txt
-	ssh ${gatewayUsername}@${gatewayName} "arp -a -n -i ${gatewayNICname}" | tee gateway_system-arp-a_n_i_${gatewayNICname}.txt
+	ssh ${gatewayUsername}@${gatewayName} 'uname -a'                           | tee gateway_system-uname-a.txt
+	ssh ${gatewayUsername}@${gatewayName} "ifconfig \"${gatewayNICname}\""     | tee "gateway_system-ifconfig-${gatewayNICname}.txt"
+	ssh ${gatewayUsername}@${gatewayName} 'cat /etc/hosts'                     | tee gateway_system-etc_hosts.txt
+	ssh ${gatewayUsername}@${gatewayName} "arp -a -n -i \"${gatewayNICname}\"" | tee "gateway_system-arp-a_n_i_${gatewayNICname}.txt"
 }
 
 
