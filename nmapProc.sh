@@ -14,9 +14,9 @@
 #
 #	Subcommands:
 #
-#	help  (common) Display help message, supports single term filtering.
+#	help  (base subcommand) Display help message, supports single term filtering.
 #
-#	ls, list  (common) Display non-common subcommands.
+#	ls, list  (base subcommand) Display non-base subcommands.
 #
 # EXIT STATUS
 #	0  : (normal) On success
@@ -50,12 +50,12 @@ main () {
 	setUpEnv
 	# Core actions
 	case ${subcommand} in
-		help )       # (common) Display this help message, supports single term filtering
+		help )       # (base subcommand) Display this help message, supports single term filtering
 			searchTerm="${1}"
 			usage "${searchTerm}"
 			;;
-		ls | list )  # (common) List non-common subcommands
-			listNonCommonSubcommands
+		ls | list )  # (base subcommand) List non-base subcommands
+			listNonBaseSubcommands
 			;;
 		* )
 			# Default: Blank or unknown subcommand, report error if unknown subcommand
@@ -128,7 +128,7 @@ warningReport () {
 }
 
 
-listNonCommonSubcommands () {
+listNonBaseSubcommands () {
 	# Description: Generate and display list of non-common subcommands
 	# References: Albing, C., JP Vossen. bash Idioms. O'Reilly. 2022.
 	# Arguments:
@@ -143,7 +143,7 @@ listNonCommonSubcommands () {
 	(
 		echo $( basename "${SELF}" ) 'Subcommands:'
 		egrep '\)[[:space:]]+# ' "${SELF}" | tr -d '\t'
-	) | grep -v "(common)" | less
+	) | grep -v "base[ ]subcommand" | less
 }
 
 
