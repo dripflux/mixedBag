@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
 
+# Dev Note: Blank (no key) first to guide user to help.
+
+# bash_pro-
+# -h, --help : Display help message
+
+
 # libsourcery-manual
 ## NAME
 ##	libsourcery.sh  Demonstrate bash script as library.

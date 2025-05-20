@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
 
+# Dev Note: Blank (no key) first to guide user to help.
+
+# bash_pro-
+# -h, --help : Display help message
+
+
 # bash_pro-manual
 ## NAME
 ##	bash_pro_shop.sh  Bash better.
@@ -21,7 +27,7 @@
 ##	-l       (base option) Display non-base options.
 ##	--list
 ##
-##	-m            0x01 (base option) Display this manual.
+##	-m            0x01 (base option) Display this manual [manual].
 ##	--manual
 ##
 ##	-B            0x?? Demo no basename(1) needed.
@@ -30,11 +36,10 @@
 ##	-c       [RESERVED]
 ##	--config
 ##
-##	-D            0x?? Demo no dirname(1) needed.
-##	--Dir
+##	-d            0x?? Demo no dirname(1) needed.
+##	--dir
 ##
-##	-d            0x?? Demo debug and more message techniques.
-##	--debugging
+##	-D            0x?? Demo debug and other message techniques.
 ##
 ##	-F            0x?? Discuss future work.
 ##	--Future
@@ -42,13 +47,13 @@
 ##	-f            0x?? Demo functions as a foundation.
 ##	--funcs
 ##
-##	-I <key>           Introspect libsourcery.sh with 'key'.
-##	--Introspect=<key>
-##	--Introspect <key>
-##
 ##	-i <key>           Introspect this program with 'key'.
 ##	--introspect=<key>
 ##	--introspect <key>
+##
+##	-L <key>           Introspect libsourcery.sh with 'key'.
+##	--LibIntro=<key>
+##	--LibIntro <key>
 ##
 ##	--log-level [RESERVED]
 ##
@@ -67,13 +72,13 @@
 ##	-S            0x?? Demo source to use library.
 ##	--Sourcery
 ##
-##	-s            0x?? Demo use of symlink.
+##	-s            [FUTURE] 0x?? Demo use of symlink.
 ##	--symlink
 ##
 ##	-t            0x?? Demo tabs for indentation.
 ##	--tabs-indent
 ##
-##	-v            0x03 (base option) Display version information; introspect key: version.
+##	-v            0x03 (base option) Display version information [version].
 ##	--version
 ##
 ## EXPERT
@@ -110,7 +115,7 @@ source "${sourceBase%%/*}/libsourcery.sh"
 # bash_pro-version
 # Save script name
 SELF="${0}"
-SEMVER_STRING="0.4.0"  # See URL: https://semver.org/
+SEMVER_STRING="0.5.0"  # See URL: https://semver.org/
 
 
 # Declare global variables
@@ -119,6 +124,7 @@ declare -A bashProIntrospect=(
 	[manual]=88
 	[sourcery]=5
 	[version]=4
+	[func_vers]=16
 )
 
 
@@ -183,7 +189,7 @@ manual () {
 	report_debug "${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
-
+# bash_pro-func_vers
 version_info () {
 	# Description: Output version information.
 	# Arguments:
@@ -363,33 +369,32 @@ process_command_line_options () {
 
 	while getopts ':-:hlmBDdFfI:i:norSstv' cmdLnToken ; do
 		case ${cmdLnToken} in
-			h )     # 0x00 (base option) Display help message.
+			 h )     # 0x00 (base option) Display help message.
 				usage
 				exit
 				;;
-			l )     # (base option) List non-base options.
+			 l )     # (base option) List non-base options.
 				list_non_base_options
 				exit
 				;;
-			m )       # 0x01 (base option) Display manual [manual].
+			 m )       # 0x01 (base option) Display manual [manual].
 				manual
 				exit
 				;;
 			B )         # 0x?? No basename.
 				;;
-			D )    # 0x?? No dirname.
+			D  )  # 0x?? No dirname.
 				;;
-			d )          # 0x?? Debug and other messages.
+			d )          # 0x?? Demo debug and other message techniques.
 				;;
-			F )       # 0x?? FUTURE work.
+			f )      # 0x04 Functions.
+				introspectKey='main'
 				;;
-			f )      # 0x?? Functions.
-				;;
-			I )             # Introspect libsourcery.sh with 'key'.
-				introspectTarget='libsourcery'
+			i )             # Introspect this program with 'key', [<<key>>].
 				introspectKey="${OPTARG}"
 				;;
-			i )             # Introspect this program with 'key'.
+			L )             # Introspect libsourcery.sh with 'key', [<<key>>].
+				introspectTarget='libsourcery'
 				introspectKey="${OPTARG}"
 				;;
 			n )       # 0x?? Naming Conventions.
@@ -401,13 +406,15 @@ process_command_line_options () {
 				;;
 			S )        # 0x?? Source as a library.
 				;;
-			s )        # 0x?? Symlink over hard code.
-				;;
+			# s )
+			#	 ;;
 			t )            # 0x?? Tabs for alignment.
 				;;
-			v )        # 0x03 (base option) Display version information [version].
+			 v )        # 0x03 (base option) Display version information [version].
 				version_info
 				exit
+				;;
+			W )  # 0x?? FUTURE work.
 				;;
 			- )
 				# Long Option Processing
@@ -460,41 +467,37 @@ process_command_line_long_options () {
 	#        ;;
 
 	case ${longOptionToken} in
-		help )  #      (base option)
+		 help )  #      (base option)
 			usage
 			exit
 			;;
-		list )  # (base option)
+		 list )  # (base option)
 			list_non_base_options
 			exit
 			;;
-		manual )  #      (base option)
+		 manual )  #      (base option)
 			manual
 			exit
 			;;
 		Baseless )  #      .
 			;;
-		Dir )  #      .
-			;;
 		debugging )  #      .
 			;;
-		Future )  #      .
-			;;
 		funcs )  #      .
-			;;
-		Introspect=* )  # .
-			introspectTarget='libsourcery'
-			introspectKey="${longOptionToken#introspect=}"
-			;;
-		Introspect )    # .
-			introspectTarget='libsourcery'
-			introspectKey="${longOptionArgument}"
-			let OPTIND++
 			;;
 		introspect=* )  # .
 			introspectKey="${longOptionToken#introspect=}"
 			;;
 		introspect )    # .
+			introspectKey="${longOptionArgument}"
+			let OPTIND++
+			;;
+		LibIntro=* )  # .
+			introspectTarget='libsourcery'
+			introspectKey="${longOptionToken#introspect=}"
+			;;
+		LibIntro )    # .
+			introspectTarget='libsourcery'
 			introspectKey="${longOptionArgument}"
 			let OPTIND++
 			;;
@@ -510,14 +513,15 @@ process_command_line_long_options () {
 			let OPTIND++
 			;;
 		refs )  #      .
+			list_references
 			;;
 		Sorcery )  #      .
 			;;
-		symlink )  #      .
-			;;
+		# symlink )
+		# 	;;
 		tabs-indent )  #      .
 			;;
-		version )  #      (base option)
+		 version )  #      (base option)
 			version_info
 			exit
 			;;
@@ -568,8 +572,11 @@ list_references () {
 	echo "- Albing, C., JP Vossen. Bash Cookbook. O'Reilly. November 23, 2017."
 	echo "- Albing, C., JP Vossen. Bash Idioms. O'Reilly. April 19, 2022."
 	echo '- Engelbart, Douglas C.; English, William K. "A research center for augmenting human intellect". AFIPS Fall Joint Computer Conference. 33: 395–410. December 9, 1968.'
+	echo '- Fox, B., C. Ramey. Bash: help. Version 5.2.'
+	echo '- man. "Online Manual Documentation Pages."'
 	echo "- Robbins, A. Bash Pocket Reference. O'Reilly. April 5, 2016."
 	echo "- Troncone, P., C. Albing. Cybersecurity Ops with Bash. O'Reilly. May 14, 2019."
+	introspectKey=CANX
 	report_debug "${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
@@ -591,6 +598,11 @@ introspect_target_with_key () {
 	key="${1}"
 	shift
 	# Core actions
+	case ${key} in
+		CANX )
+			return
+			;;
+	esac
 	case ${introspectTarget} in
 		self )
 			introspect_bash_pro_with_key "${key}"
@@ -628,11 +640,17 @@ introspect_bash_pro_with_key () {
 		main )
 			linesAfter="${bashProIntrospect[main]}"
 			;;
+		manual )
+			linesAfter="${bashProIntrospect[manual]}"
+			;;
 		sourcery )
 			linesAfter="${bashProIntrospect[sourcery]}"
 			;;
 		version )
 			linesAfter="${bashProIntrospect[version]}"
+			;;
+		func_vers )
+			linesAfter="${bashProIntrospect[func_vers]}"
 			;;
 	esac
 	introspect_self "bash_pro-${key}" "${linesAfter}"
