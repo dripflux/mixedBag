@@ -121,11 +121,14 @@ SEMVER_STRING="0.5.0"  # See URL: https://semver.org/
 # Declare global variables
 declare -A bashProIntrospect=(
 	[main]=19
-	[manual]=88
+	[manual]=96
 	[sourcery]=5
-	[usage]=22
+	[usage]=23
 	[version]=4
-	[func_vers]=16
+	[func_debug]=15
+	[func_setup]=20
+	[func_telem]=15
+	[func_vers]=17
 )
 
 
@@ -209,6 +212,7 @@ version_info () {
 }
 
 
+# bash_pro-func_setup
 set_up_environment () {
 	# Description: Set up environment.
 	# Arguments:
@@ -316,6 +320,7 @@ report_complete () {
 }
 
 
+# bash_pro-func_telem
 report_telemetry () {
 	# Description: Output ${1} (telemetry message) to stderr as telemetry.
 	# Arguments:
@@ -332,6 +337,7 @@ report_telemetry () {
 }
 
 
+# bash_pro-func_debug
 report_debug () {
 	# Description: Output ${1} (debug message) to stderr as debug.
 	# Arguments:
@@ -387,6 +393,7 @@ process_command_line_options () {
 			D  )  # 0x?? No dirname.
 				;;
 			d )          # 0x?? Demo debug and other message techniques.
+				introspectKey='func_debug'
 				;;
 			f )      # 0x04 Functions.
 				introspectKey='main'
@@ -484,6 +491,7 @@ process_command_line_long_options () {
 		Baseless )  #      .
 			;;
 		debugging )  #      .
+			introspectKey='func_debug'
 			;;
 		funcs )  #      .
 			introspectKey='main'
@@ -655,6 +663,15 @@ introspect_bash_pro_with_key () {
 			;;
 		version )
 			linesAfter="${bashProIntrospect[version]}"
+			;;
+		func_debug )
+			linesAfter="${bashProIntrospect[func_debug]}"
+			;;
+		func_setup )
+			linesAfter="${bashProIntrospect[func_setup]}"
+			;;
+		func_telem )
+			linesAfter="${bashProIntrospect[func_telem]}"
 			;;
 		func_vers )
 			linesAfter="${bashProIntrospect[func_vers]}"
