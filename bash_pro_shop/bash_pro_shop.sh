@@ -123,6 +123,7 @@ declare -A bashProIntrospect=(
 	[main]=19
 	[manual]=88
 	[sourcery]=5
+	[usage]=22
 	[version]=4
 	[func_vers]=16
 )
@@ -148,7 +149,7 @@ main () {
 	report_debug "${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
-
+# bash_pro-usage
 usage () {
 	# Description: Generate and display usage.
 	# References:
@@ -367,7 +368,7 @@ process_command_line_options () {
 	#        exampleVar="${OPTARG}"
 	#        ;;
 
-	while getopts ':-:hlmBDdFfI:i:norSstv' cmdLnToken ; do
+	while getopts ':-:hlmBDdfi:L:norStvW' cmdLnToken ; do
 		case ${cmdLnToken} in
 			 h )     # 0x00 (base option) Display help message.
 				usage
@@ -405,6 +406,7 @@ process_command_line_options () {
 				list_references
 				;;
 			S )        # 0x?? Source as a library.
+				introspectKey='sourcery'
 				;;
 			# s )
 			#	 ;;
@@ -484,6 +486,7 @@ process_command_line_long_options () {
 		debugging )  #      .
 			;;
 		funcs )  #      .
+			introspectKey='main'
 			;;
 		introspect=* )  # .
 			introspectKey="${longOptionToken#introspect=}"
@@ -516,6 +519,7 @@ process_command_line_long_options () {
 			list_references
 			;;
 		Sorcery )  #      .
+			introspectKey='sourcery'
 			;;
 		# symlink )
 		# 	;;
@@ -645,6 +649,9 @@ introspect_bash_pro_with_key () {
 			;;
 		sourcery )
 			linesAfter="${bashProIntrospect[sourcery]}"
+			;;
+		usage )
+			linesAfter="${bashProIntrospect[usage]}"
 			;;
 		version )
 			linesAfter="${bashProIntrospect[version]}"

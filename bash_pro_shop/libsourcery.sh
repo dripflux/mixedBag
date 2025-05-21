@@ -3,7 +3,7 @@
 
 # Dev Note: Blank (no key) first to guide user to help.
 
-# bash_pro-
+# libsourcery-  [-] INFO: Intended to be sourced as a library
 # -h, --help : Display help message
 
 
@@ -113,7 +113,7 @@ main () {
 	process_command_line_options "${@}"
 	shift $(( ${OPTIND} - 1 ))  # Shifting argv needs to occur in main() vice process_command_line_options()
 	# Core actions
-	:
+	introspect_libsourcery_with_key "${introspectKey}"
 	report_debug "${SELF##*/}::${FUNCNAME[1]}() <-- ${FUNCNAME[0]}()"
 }
 
@@ -336,22 +336,22 @@ process_command_line_options () {
 
 	while getopts ':-:hlmLv' cmdLnToken ; do
 		case ${cmdLnToken} in
-			h )     # (base option) Display help message.
+			 h )     # (base option) Display help message.
 				usage
 				exit
 				;;
-			l )     # (base option) List non-base options.
+			 l )     # (base option) List non-base options.
 				list_non_base_options
 				exit
 				;;
-			m )       # (base option) Display manual.
+			 m )       # (base option) Display manual.
 				manual
 				exit
 				;;
 			L )               # List library defined functions
 				list_defined_functions
 				;;
-			v )        # (base option) Display version information.
+			 v )        # (base option) Display version information.
 				version_info
 				exit
 				;;
@@ -406,18 +406,18 @@ process_command_line_long_options () {
 	#        ;;
 
 	case ${longOptionToken} in
-		help )  # (base option)
+		 help )  # (base option)
 			usage
 			exit
 			;;
-		list )  # (base option)
+		 list )  # (base option)
 			list_non_base_options
 			exit
 			;;
 		List-functions )  # .
 			list_defined_functions
 			;;
-		manual )  # (base option)
+		 manual )  # (base option)
 			manual
 			exit
 			;;
@@ -428,7 +428,7 @@ process_command_line_long_options () {
 			sourceFile="${longOptionArgument}"
 			let OPTIND++
 			;;
-		version )  # (base option)
+		 version )  # (base option)
 			version_info
 			exit
 			;;
